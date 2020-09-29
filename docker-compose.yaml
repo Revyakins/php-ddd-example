@@ -1,0 +1,40 @@
+version: '2'
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: openTag
+      POSTGRES_DB: openTag
+    ports:
+    - '5433:5432'
+  api:
+    build: docker/php-fpm
+    ports:
+    - '9002:9000'
+    volumes:
+    - ./:/var/www/symfony:cached
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: openTag
+      POSTGRES_DB: openTag
+    links:
+    - postgres
+    depends_on:
+    - redis
+  nginx:
+    build: docker/nginx
+    ports:
+    - '8080:80'
+    links:
+    - api
+    volumes_from:
+    - api
+    volumes:
+    - ./logs/nginx/:/var/log/nginx:cached
+  redis:
+    image: "redis:alpine"
+    ports:
+    - "6379:6379"
+    volumes:
+    - .docker/redis/data:/redis
