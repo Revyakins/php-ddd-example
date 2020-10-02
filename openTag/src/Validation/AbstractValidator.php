@@ -7,6 +7,19 @@ use App\Validation\Rule\ModeratorRuleInterface;
 
 abstract class AbstractValidator
 {
+    /**
+     * AbstractValidator constructor.
+     * @param string $text
+     * @throws ValidatorException
+     */
+    public function __construct(string $text)
+    {
+        $this->check($text);
+    }
+
+    /**
+     * @var array
+     */
     protected $rules = [];
 
     /**

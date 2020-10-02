@@ -3,7 +3,6 @@
 
 namespace App\Validation\Rule;
 
-
 interface ModeratorRuleInterface
 {
     /**

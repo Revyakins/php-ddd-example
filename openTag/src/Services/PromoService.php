@@ -4,8 +4,10 @@
 namespace App\Services;
 
 use App\Entity\Promo;
+use App\Message\SendModerator;
 use App\Repository\PromoRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class PromoService
 {
@@ -15,22 +17,45 @@ class PromoService
     private $entityManager;
 
     /**
+     * @var MessageBusInterface
+     */
+    private $bus;
+
+    /**
      * @var PromoRepository
      */
     private $promoRepository;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    /**
+     * PromoService constructor.
+     * @param EntityManagerInterface $entityManager
+     * @param MessageBusInterface $bus
+     */
+    public function __construct(EntityManagerInterface $entityManager, MessageBusInterface $bus)
     {
         $this->entityManager = $entityManager;
+        $this->bus = $bus;
         $this->promoRepository = $this->entityManager->getRepository(Promo::class);
     }
 
+    /**
+     * @param Promo $promo
+     * @return int|null
+     */
     public function create(Promo $promo)
     {
         $this->entityManager->persist($promo);
         $this->entityManager->flush();
 
         return $promo->getId();
+    }
+
+    /**
+     * @param int $promoId
+     */
+    public function sentToModerate(int $promoId)
+    {
+        $this->bus->dispatch(new SendModerator($promoId));
     }
 
     /**

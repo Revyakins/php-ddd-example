@@ -2,30 +2,22 @@
 
 namespace App\Controller;
 
-use App\DTO\PromoResponse;
+use App\Contract\Response\PromoResponse;
 use App\Entity\Promo;
-use App\Message\SendModerator;
 use App\Services\PromoService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class PromoController extends AbstractController
 {
-
     /**
      * @var Request
      */
     private $request;
-
-    /**
-     * @var MessageBusInterface
-     */
-    private $bus;
 
     /**
      * @var ValidatorInterface
@@ -40,24 +32,22 @@ class PromoController extends AbstractController
     /**
      * PromoController constructor.
      * @param RequestStack $requestStack
-     * @param MessageBusInterface $bus
      * @param ValidatorInterface $validator
      * @param PromoService $promoService
      */
     public function __construct(
         RequestStack $requestStack,
-        MessageBusInterface $bus,
         ValidatorInterface $validator,
         PromoService $promoService
     )
     {
         $this->request = $requestStack->getCurrentRequest();
-        $this->bus = $bus;
         $this->validator = $validator;
         $this->promoService = $promoService;
     }
 
     /**
+     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/promo", name="promo", methods={"GET"})
      */
     public function getAll()
@@ -85,26 +75,24 @@ class PromoController extends AbstractController
     public function create()
     {
         $promo = new Promo();
-        //var_dump(json_decode($this->request->getContent(), true)); die;
-        $request = json_decode($this->request->getContent(), true);
+        $request = \json_decode($this->request->getContent(), true);
         $promo->setTitle($request['title'])
             ->setMainText($request['mainText'])
             ->setCategory($request['category']);
 
         $errors = $this->validator->validate($promo);
 
-        if (count($errors) > 0) {
+            if (count($errors) > 0) {
             $errorsString = (string) $errors;
             return $this->json($errorsString);
         }
 
         try {
             $id = $this->promoService->create($promo);
+            $this->promoService->sentToModerate($id);
         } catch (\Throwable $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-
-        $this->bus->dispatch(new SendModerator($id));
 
         return $this->json(
             (new PromoResponse())
@@ -115,7 +103,7 @@ class PromoController extends AbstractController
                 ->setCategory($request['category'])
                 ->setStatus(Promo::STATUS_MODERATION)
                 ->setActive(false),
-            Response::HTTP_OK
+            Response::HTTP_CREATED
         );
     }
 }

@@ -1,21 +1,29 @@
 <?php
 
 
-namespace App\DTO;
+namespace App\Contract\Response;
 
-class PromoResponse
+use JsonSerializable;
+
+/**
+ * Класс контракт для ответа клиенту
+ *
+ * Class PromoResponse
+ * @package App\Contract\Response
+ */
+class PromoResponse  implements JsonSerializable
 {
-    public $id;
+    private $id = null;
 
-    public $active;
+    private $active = null;
 
-    public $title;
+    private $title = null;
 
-    public $mainText;
+    private $mainText = null;
 
-    public $category;
+    private $category = null;
 
-    public $status;
+    private $status = null;
 
     /**
      * @param mixed $id
@@ -75,5 +83,13 @@ class PromoResponse
     {
         $this->active = $active;
         return $this;
+    }
+
+    /**
+     * @return array|mixed
+     */
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 }

@@ -4,8 +4,8 @@ Content-type: application/json
 #Cookie: PHPSESSID=
 
 {
-  "title": "test1!!",
-  "mainText": "main text",
+  "title": "test title!",
+  "mainText": "main test text",
   "category": "category"
 }
 ###
