@@ -4,7 +4,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use DateTime;
+use DateTimeImmutable;
 
 /**
  * @ORM\HasLifecycleCallbacks
@@ -12,26 +12,27 @@ use DateTime;
 class EntityBase
 {
     /**
-     * @var DateTime $created
+     * @var DateTimeImmutable $created
      *
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime_immutable")
      */
     protected $createdAt;
 
     /**
-     * @var DateTime $updated
+     * @var DateTimeImmutable $updated
      *
-     * @ORM\Column(name="updated_at", type="datetime")
+     * @ORM\Column(name="updated_at", type="datetime_immutable")
      */
     protected $updatedAt;
 
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
+     * @throws \Exception
      */
     public function updatedTimestamps(): void
     {
-        $dateTimeNow = new DateTime('now');
+        $dateTimeNow = new \DateTimeImmutable();
 
         $this->setUpdatedAt($dateTimeNow);
 
@@ -40,24 +41,24 @@ class EntityBase
         }
     }
 
-    public function getCreatedAt() :?DateTime
+    public function getCreatedAt() :?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTime $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt() :?DateTime
+    public function getUpdatedAt() :?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(DateTime $updatedAt): self
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 

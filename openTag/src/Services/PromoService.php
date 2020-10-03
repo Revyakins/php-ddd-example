@@ -42,7 +42,7 @@ class PromoService
      * @param Promo $promo
      * @return int|null
      */
-    public function create(Promo $promo)
+    public function create(Promo $promo): int
     {
         $this->entityManager->persist($promo);
         $this->entityManager->flush();
@@ -53,7 +53,7 @@ class PromoService
     /**
      * @param int $promoId
      */
-    public function sentToModerate(int $promoId)
+    public function sentToModerate(int $promoId): void
     {
         $this->bus->dispatch(new SendModerator($promoId));
     }
@@ -61,7 +61,7 @@ class PromoService
     /**
      * @return mixed Promo[]
      */
-    public function getAll()
+    public function getList(): iterable
     {
         return $this->promoRepository->findAll();
     }

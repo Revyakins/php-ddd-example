@@ -1,4 +1,4 @@
-GET http://127.0.0.1:8080/promo
+GET http://127.0.0.1:8080/api/promo/getList
 Accept: application/json
 Content-type: application/json
 #Cookie: PHPSESSID=

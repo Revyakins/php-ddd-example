@@ -32,7 +32,6 @@ class ModeratorHandler
     private $isSuccessModeration = true;
 
     /**
-     * SendModeratorHandler constructor.
      * @param EntityManagerInterface $entityManager
      * @param ModeratorResolverInterface $moderator
      */
@@ -48,6 +47,7 @@ class ModeratorHandler
      */
     public function __invoke(SendModerator $message)
     {
+        //имитация работы модератора
         sleep(5);
 
         /** @var Promo $promo */
@@ -61,7 +61,7 @@ class ModeratorHandler
             $this->entityManager->persist($promo);
             $this->entityManager->flush();
 
-            $this->setIsSuccessModeration(false);
+            $this->moderationIsFailure();
         }
 
         if ($this->isSuccessModeration()) {
@@ -72,12 +72,9 @@ class ModeratorHandler
         }
     }
 
-    /**
-     * @param bool $isSuccessModeration
-     */
-    public function setIsSuccessModeration(bool $isSuccessModeration): void
+    private function moderationIsFailure()
     {
-        $this->isSuccessModeration = $isSuccessModeration;
+        $this->isSuccessModeration = false;
     }
 
     /**

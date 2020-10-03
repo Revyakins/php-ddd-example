@@ -44,7 +44,7 @@ abstract class AbstractValidator
     /**
      * @return array
      */
-    public function getRules(): array
+    public function getRules(): iterable
     {
         return $this->rules;
     }

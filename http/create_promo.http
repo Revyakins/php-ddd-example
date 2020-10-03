@@ -1,10 +1,10 @@
-POST http://127.0.0.1:8080/promo/create
+POST http://127.0.0.1:8080/api/promo/create
 Accept: application/json
 Content-type: application/json
 #Cookie: PHPSESSID=
 
 {
-  "title": "test title!",
+  "title": "new test title!!",
   "mainText": "main test text",
   "category": "category"
 }

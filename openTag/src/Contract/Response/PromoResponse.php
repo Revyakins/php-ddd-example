@@ -7,9 +7,6 @@ use JsonSerializable;
 
 /**
  * Класс контракт для ответа клиенту
- *
- * Class PromoResponse
- * @package App\Contract\Response
  */
 class PromoResponse  implements JsonSerializable
 {

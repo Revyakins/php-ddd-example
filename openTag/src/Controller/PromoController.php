@@ -12,7 +12,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class PromoController extends AbstractController
+/**
+ * @Route("/api/promo")
+ */
+final class PromoController extends AbstractController
 {
     /**
      * @var Request
@@ -48,11 +51,11 @@ class PromoController extends AbstractController
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/promo", name="promo", methods={"GET"})
+     * @Route("/getList", methods={"GET"})
      */
-    public function getAll()
+    public function getList()
     {
-        $promos = $this->promoService->getAll();
+        $promos = $this->promoService->getList();
 
         $dto = [];
         foreach ($promos as $promo) {
@@ -70,15 +73,14 @@ class PromoController extends AbstractController
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("promo/create", name="promo_create", methods={"POST"})
+     * @Route("/create", methods={"POST"})
      */
     public function create()
     {
         $promo = new Promo();
-        $request = \json_decode($this->request->getContent(), true);
-        $promo->setTitle($request['title'])
-            ->setMainText($request['mainText'])
-            ->setCategory($request['category']);
+        $promo->setTitle($this->request->get('title'))
+            ->setMainText($this->request->get('mainText'))
+            ->setCategory($this->request->get('category'));
 
         $errors = $this->validator->validate($promo);
 
@@ -96,11 +98,10 @@ class PromoController extends AbstractController
 
         return $this->json(
             (new PromoResponse())
-            ->setId($id)
-            ->setTitle($this->request->get('title'))
-                ->setTitle($request['title'])
-                ->setMainText($request['mainText'])
-                ->setCategory($request['category'])
+                ->setId($id)
+                ->setTitle($this->request->get('title'))
+                ->setMainText($this->request->get('mainText'))
+                ->setCategory($this->request->get('category'))
                 ->setStatus(Promo::STATUS_MODERATION)
                 ->setActive(false),
             Response::HTTP_CREATED
