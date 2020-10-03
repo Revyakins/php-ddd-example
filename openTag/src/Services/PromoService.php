@@ -51,6 +51,27 @@ class PromoService
     }
 
     /**
+     * @param Promo $promo
+     */
+    public function setModerationToFailure(Promo $promo)
+    {
+        $promo->setStatus(Promo::STATUS_MODERATION_FAILURE);
+        $this->entityManager->persist($promo);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param Promo $promo
+     */
+    public function setModerationToSuccess(Promo $promo)
+    {
+        $promo->setStatus(Promo::STATUS_MODERATION_SUCCESS);
+        $promo->setActive(true);
+        $this->entityManager->persist($promo);
+        $this->entityManager->flush();
+    }
+
+    /**
      * @param int $promoId
      */
     public function sentToModerate(int $promoId): void
