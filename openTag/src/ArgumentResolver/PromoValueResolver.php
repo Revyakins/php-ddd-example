@@ -4,7 +4,7 @@
 namespace App\ArgumentResolver;
 
 use App\Entity\Promo;
-use App\Request\DTO\CreatePromoRequest;
+use App\DTO\Request\CreatePromoRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;

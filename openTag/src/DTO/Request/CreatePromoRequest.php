@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Request\DTO;
+namespace App\DTO\Request;
 
 class CreatePromoRequest
 {

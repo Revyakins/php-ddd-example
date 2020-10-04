@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Contract\Response\PromoResponse;
+use App\DTO\Response\PromoResponse;
 use App\Entity\Promo;
-use App\Request\DTO\CreatePromoRequest;
+use App\DTO\Request\CreatePromoRequest;
 use App\Services\PromoService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

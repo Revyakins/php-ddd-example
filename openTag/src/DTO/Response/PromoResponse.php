@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Contract\Response;
+namespace App\DTO\Response;
 
 use JsonSerializable;
 

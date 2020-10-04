@@ -6,7 +6,7 @@ namespace App\Services;
 use App\Entity\Promo;
 use App\Message\PromoModerationEvent;
 use App\Repository\PromoRepository;
-use App\Request\DTO\CreatePromoRequest;
+use App\DTO\Request\CreatePromoRequest;
 use App\Validation\ModeratorResolverInterface;
 use App\Validation\ValidatorException;
 use Doctrine\ORM\EntityManagerInterface;
