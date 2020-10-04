@@ -3,10 +3,8 @@
 
 namespace App\MessageHandler;
 
-use App\Entity\Promo;
 use App\Message\PromoModerationEvent;
 use App\Services\PromoService;
-use Doctrine\ORM\EntityManagerInterface;
 
 class ModeratorHandler
 {
@@ -17,7 +15,6 @@ class ModeratorHandler
 
     /**
      * @param PromoService $promoService
-     * @param EntityManagerInterface $entityManager
      */
     public function __construct(PromoService $promoService)
     {

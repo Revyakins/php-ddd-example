@@ -35,11 +35,6 @@ class PromoService
     private $moderator;
 
     /**
-     * @var bool
-     */
-    private $isSuccessModeration = true;
-
-    /**
      * PromoService constructor.
      * @param EntityManagerInterface $entityManager
      * @param MessageBusInterface $bus
@@ -113,13 +108,10 @@ class PromoService
         try {
             $this->moderator->checkTitle($promo->getTitle());
             $this->moderator->checkMainText($promo->getMainText());
+
+            $this->setModerationToSuccess($promo);
         }  catch (ValidatorException $exception) {
             $this->setModerationToFailure($promo);
-            $this->moderationIsFailure();
-        }
-
-        if ($this->isSuccessModeration()) {
-            $this->setModerationToSuccess($promo);
         }
     }
 
@@ -129,18 +121,5 @@ class PromoService
     public function getList(): iterable
     {
         return $this->promoRepository->findAll();
-    }
-
-    private function moderationIsFailure()
-    {
-        $this->isSuccessModeration = false;
-    }
-
-    /**
-     * @return bool
-     */
-    private function isSuccessModeration(): bool
-    {
-        return $this->isSuccessModeration;
     }
 }
