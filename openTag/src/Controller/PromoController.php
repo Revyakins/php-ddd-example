@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Contract\Response\PromoResponse;
 use App\Entity\Promo;
+use App\Request\DTO\CreatePromoRequest;
 use App\Services\PromoService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,25 +73,14 @@ final class PromoController extends AbstractController
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/create", methods={"POST"})
+     * @param CreatePromoRequest $promoRequest
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function create()
+    public function create(CreatePromoRequest $promoRequest)
     {
-        $promo = new Promo();
-        $promo->setTitle($this->request->get('title'))
-            ->setMainText($this->request->get('mainText'))
-            ->setCategory($this->request->get('category'));
-
-        $errors = $this->validator->validate($promo);
-
-            if (count($errors) > 0) {
-            $errorsString = (string) $errors;
-            return $this->json($errorsString);
-        }
-
         try {
-            $id = $this->promoService->create($promo);
+            $id = $this->promoService->create($promoRequest);
             $this->promoService->sentToModerate($id);
         } catch (\Throwable $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);

@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Entity\Promo;
 use App\Message\SendModerator;
 use App\Repository\PromoRepository;
+use App\Request\DTO\CreatePromoRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -39,11 +40,16 @@ class PromoService
     }
 
     /**
-     * @param Promo $promo
+     * @param CreatePromoRequest $promoRequest
      * @return int|null
      */
-    public function create(Promo $promo): int
+    public function create(CreatePromoRequest $promoRequest): int
     {
+        $promo = new Promo();
+        $promo->setTitle($promoRequest->getTitle())
+            ->setMainText($promoRequest->getMainText())
+            ->setCategory($promoRequest->getCategory());
+
         $this->entityManager->persist($promo);
         $this->entityManager->flush();
 
