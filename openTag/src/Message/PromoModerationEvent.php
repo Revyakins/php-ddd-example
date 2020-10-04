@@ -2,7 +2,7 @@
 
 namespace App\Message;
 
-class SendModerator
+class PromoModerationEvent
 {
     private $id;
 

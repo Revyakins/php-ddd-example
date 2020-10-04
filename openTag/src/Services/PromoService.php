@@ -4,9 +4,11 @@
 namespace App\Services;
 
 use App\Entity\Promo;
-use App\Message\SendModerator;
+use App\Message\PromoModerationEvent;
 use App\Repository\PromoRepository;
 use App\Request\DTO\CreatePromoRequest;
+use App\Validation\ModeratorResolverInterface;
+use App\Validation\ValidatorException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -28,15 +30,31 @@ class PromoService
     private $promoRepository;
 
     /**
+     * @var ModeratorResolverInterface
+     */
+    private $moderator;
+
+    /**
+     * @var bool
+     */
+    private $isSuccessModeration = true;
+
+    /**
      * PromoService constructor.
      * @param EntityManagerInterface $entityManager
      * @param MessageBusInterface $bus
+     * @param ModeratorResolverInterface $moderator
      */
-    public function __construct(EntityManagerInterface $entityManager, MessageBusInterface $bus)
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        MessageBusInterface $bus,
+        ModeratorResolverInterface $moderator
+    )
     {
         $this->entityManager = $entityManager;
         $this->bus = $bus;
         $this->promoRepository = $this->entityManager->getRepository(Promo::class);
+        $this->moderator = $moderator;
     }
 
     /**
@@ -82,7 +100,27 @@ class PromoService
      */
     public function sentToModerate(int $promoId): void
     {
-        $this->bus->dispatch(new SendModerator($promoId));
+        $this->bus->dispatch(new PromoModerationEvent($promoId));
+    }
+
+    /**
+     * @param int $promoId
+     */
+    public function checkModerator(int $promoId)
+    {
+        $promo = $this->promoRepository->find($promoId);
+
+        try {
+            $this->moderator->checkTitle($promo->getTitle());
+            $this->moderator->checkMainText($promo->getMainText());
+        }  catch (ValidatorException $exception) {
+            $this->setModerationToFailure($promo);
+            $this->moderationIsFailure();
+        }
+
+        if ($this->isSuccessModeration()) {
+            $this->setModerationToSuccess($promo);
+        }
     }
 
     /**
@@ -91,5 +129,18 @@ class PromoService
     public function getList(): iterable
     {
         return $this->promoRepository->findAll();
+    }
+
+    private function moderationIsFailure()
+    {
+        $this->isSuccessModeration = false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isSuccessModeration(): bool
+    {
+        return $this->isSuccessModeration;
     }
 }
