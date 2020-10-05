@@ -66,6 +66,8 @@ class PromoService
         $this->entityManager->persist($promo);
         $this->entityManager->flush();
 
+        $this->sentToModerate($promo->getId());
+
         return $promo->getId();
     }
 

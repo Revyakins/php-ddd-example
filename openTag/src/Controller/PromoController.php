@@ -81,7 +81,6 @@ final class PromoController extends AbstractController
     {
         try {
             $id = $this->promoService->create($promoRequest);
-            $this->promoService->sentToModerate($id);
         } catch (\Throwable $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
