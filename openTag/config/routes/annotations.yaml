@@ -1,5 +1,5 @@
-controllers:
-    resource: ../../src/Controller/
+controllerApiPromoV1:
+    resource: ../../src/Billboard/Promo/Application/Controller/API/V1
     type: annotation
 
 kernel:

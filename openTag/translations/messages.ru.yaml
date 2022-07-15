@@ -1,0 +1,4 @@
+status:
+  moderation: 'На модерации'
+  moderation_success: 'Успешная модерация'
+  moderation_failure: 'Не прошло модерацию'

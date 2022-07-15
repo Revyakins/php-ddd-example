@@ -1,0 +1,4 @@
+status:
+  moderation: 'Moderation'
+  moderation_success: 'Moderation success'
+  moderation_failure: 'Moderation failure'
