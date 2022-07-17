@@ -10,5 +10,7 @@ interface PromoRepositoryInterface
 {
     public function save(Promo $promo): void;
 
-   public  function find($id, $lockMode = null, $lockVersion = null);
+    public  function find($id, $lockMode = null, $lockVersion = null);
+
+    public function update(Promo $promo, Promo $promoUpdate): void;
 }

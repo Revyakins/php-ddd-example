@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Billboard\Promo\Application\Services\Specification\Condition;
+namespace App\Billboard\Promo\Application\Services\Validation\Specification\Condition;
 
-use App\Billboard\Promo\Application\Services\Specification\PromoSpecification;
+use App\Billboard\Promo\Application\Services\Validation\Specification\PromoSpecification;
 use App\Billboard\Promo\Domain\Entity\Promo;
 
 class EmailPromoBodySpecification implements PromoSpecification

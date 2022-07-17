@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Billboard\Promo\Application\Services\Specification\Event;
+namespace App\Billboard\Promo\Application\Services\Validation\Specification\Event;
 
-use App\Billboard\Promo\Application\Services\Specification\AndPromoSpecification;
-use App\Billboard\Promo\Application\Services\Specification\Condition\MainTextSpecification;
-use App\Billboard\Promo\Application\Services\Specification\Condition\TitlePromoSpecification;
-use App\Billboard\Promo\Application\Services\Specification\PromoSpecification;
-use App\Billboard\Promo\Application\Services\Specification\RootSpecification;
+use App\Billboard\Promo\Application\Services\Validation\Specification\AndPromoSpecification;
+use App\Billboard\Promo\Application\Services\Validation\Specification\Condition\MainTextSpecification;
+use App\Billboard\Promo\Application\Services\Validation\Specification\Condition\TitlePromoSpecification;
+use App\Billboard\Promo\Application\Services\Validation\Specification\PromoSpecification;
+use App\Billboard\Promo\Application\Services\Validation\Specification\RootSpecification;
 use App\Billboard\Promo\Domain\Entity\Promo;
 
 class PromoCreatedSpecification implements PromoSpecification, RootSpecification

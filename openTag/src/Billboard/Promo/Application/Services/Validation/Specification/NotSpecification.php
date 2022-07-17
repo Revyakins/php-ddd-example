@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Billboard\Promo\Application\Services\Specification;
+namespace App\Billboard\Promo\Application\Services\Validation\Specification;
 
 use App\Billboard\Promo\Domain\Entity\Promo;
 

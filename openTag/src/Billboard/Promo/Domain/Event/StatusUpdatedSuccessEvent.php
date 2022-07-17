@@ -6,7 +6,7 @@ use App\Shared\Event\DomainEvent;
 use DateTimeImmutable;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class StatusUpdatedEvent extends Event implements DomainEvent
+class StatusUpdatedSuccessEvent extends Event implements DomainEvent
 {
     protected DateTimeImmutable $occurred;
 
@@ -14,8 +14,6 @@ class StatusUpdatedEvent extends Event implements DomainEvent
     {
         $this->occurred = new DateTimeImmutable();
     }
-
-
 
     public function getOccurred(): DateTimeImmutable
     {

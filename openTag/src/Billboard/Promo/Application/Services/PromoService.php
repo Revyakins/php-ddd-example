@@ -5,35 +5,27 @@ declare(strict_types=1);
 namespace App\Billboard\Promo\Application\Services;
 
 use App\Billboard\Promo\Application\DTO\Request\CreatePromo;
+use App\Billboard\Promo\Application\DTO\Response\PromoResponse;
 use App\Billboard\Promo\Domain\Entity\Promo;
-use App\Billboard\Promo\Domain\Entity\PromoId;
 use App\Billboard\Promo\Domain\Repository\PromoRepositoryInterface;
-use App\Billboard\Promo\Domain\ValueObject\PromoBody;
-use App\Billboard\Promo\Domain\ValueObject\PromoTitle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Ramsey\Uuid\Uuid;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PromoService
 {
-    private PromoRepositoryInterface $promoRepository;
-
-    private EventDispatcherInterface $eventDispatcher;
-
     public function __construct(
-        PromoRepositoryInterface $promoRepository,
-        EventDispatcherInterface $eventDispatcher,
-    )
-    {
-        $this->promoRepository = $promoRepository;
-        $this->eventDispatcher = $eventDispatcher;
-    }
+        private readonly PromoRepositoryInterface $promoRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly TranslatorInterface $translator
+    ){}
 
-    public function create(CreatePromo $createPromo): Promo
+    public function create(CreatePromo $createPromo): PromoResponse
     {
         $promo = Promo::create(
-            new PromoId(Uuid::uuid4()->toString()),
-            title: new PromoTitle($createPromo->title()),
-            body: new PromoBody($createPromo->body())
+            Uuid::uuid4()->toString(),
+            title: $createPromo->title(),
+            body: $createPromo->body()
         );
 
         $this->promoRepository->save($promo);
@@ -42,14 +34,33 @@ class PromoService
             $this->eventDispatcher->dispatch($domainEvent);
         }
 
-        return $promo;
+        return new PromoResponse(
+            id: $promo->getId(),
+            active: $promo->getActive(),
+            title: $promo->getTitle(),
+            body: $promo->getBody(),
+            status: $this->translator->trans($promo->getStatus())
+        );
     }
 
     /**
-     * @return mixed Promo[]
+     * @return PromoResponse[]
      */
-    public function getList(): iterable
+    public function getPromoResponseList(): iterable
     {
-        return $this->promoRepository->findAll();
+        $promos = $this->promoRepository->findAll();
+
+        $dto = [];
+        foreach ($promos as $promo) {
+            $dto[] = new PromoResponse(
+                id: $promo->getId(),
+                active: $promo->getActive(),
+                title: $promo->getTitle(),
+                body: $promo->getBody(),
+                status: $this->translator->trans($promo->getStatus())
+            );
+        }
+
+        return $dto;
     }
 }

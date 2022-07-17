@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Billboard\Promo\Application\Services\Specification;
+namespace App\Billboard\Promo\Application\Services\Validation\Specification;
 
 use App\Shared\Aggregate\AggregateRoot;
 

@@ -18,7 +18,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class PromoRepository extends ServiceEntityRepository implements PromoRepositoryInterface
 {
 
-    public function __construct(ManagerRegistry $registry,)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Promo::class);
     }
@@ -26,6 +26,15 @@ class PromoRepository extends ServiceEntityRepository implements PromoRepository
     public function save(Promo $promo): void
     {
         $this->_em->persist($promo);
+        $this->_em->flush();
+    }
+
+    public function update(Promo $promo, Promo $promoUpdate): void
+    {
+        $this->_em->remove($promo);
+        $this->_em->flush();
+
+        $this->_em->persist($promoUpdate);
         $this->_em->flush();
     }
 }

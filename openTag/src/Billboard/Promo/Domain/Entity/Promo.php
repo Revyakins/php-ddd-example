@@ -6,7 +6,8 @@ namespace App\Billboard\Promo\Domain\Entity;
 
 use App\Billboard\Promo\Domain\Enum\Status;
 use App\Billboard\Promo\Domain\Event\PromoCreatedEvent;
-use App\Billboard\Promo\Domain\Event\StatusUpdatedEvent;
+use App\Billboard\Promo\Domain\Event\StatusUpdatedFailureEvent;
+use App\Billboard\Promo\Domain\Event\StatusUpdatedSuccessEvent;
 use App\Billboard\Promo\Domain\ValueObject\PromoBody;
 use App\Billboard\Promo\Domain\ValueObject\PromoTitle;
 use App\Shared\Aggregate\AggregateRoot;
@@ -24,14 +25,14 @@ class Promo extends AggregateRoot
     private bool $active;
 
     private function __construct(
-        string $promoId,
-        string $title,
-        string $body
+        PromoId $promoId,
+        PromoTitle $title,
+        PromoBody $body
     )
     {
-        $this->id = $promoId;
-        $this->title = $title;
-        $this->body = $body;
+        $this->id = $promoId->value();
+        $this->title = $title->value();
+        $this->body = $body->value();
         $this->active = false;
         $this->status = Status::MODERATION;
 
@@ -39,26 +40,55 @@ class Promo extends AggregateRoot
     }
 
     public static function create(
-        PromoId $promoId,
-        PromoTitle $title,
-        PromoBody $body
+        string $promoId,
+        string $title,
+        string $body
     ): self {
         $promo = new self(
-            promoId: $promoId->value(),
-            title: $title->value(),
-            body: $body->value()
+            promoId: new PromoId($promoId),
+            title: new PromoTitle($title),
+            body: new PromoBody($body)
         );
 
-        $promo->recordDomainEvent(new PromoCreatedEvent($promoId));
+        $promo->recordDomainEvent(new PromoCreatedEvent(new PromoId($promoId)));
 
         return $promo;
     }
 
-    public function updateStatus(Status $status)
+    public static function failure(
+        string $promoId,
+        string $title,
+        string $body
+    ): static
     {
-       $this->setStatus($status);
+        $promo = new self(
+            promoId: new PromoId($promoId),
+            title: new PromoTitle($title),
+            body: new PromoBody($body),
+        );
+        $promo->setStatus(Status::MODERATION_FAILURE);
+        $promo->setActive(false);
 
-       $this->recordDomainEvent(new StatusUpdatedEvent());
+        $promo->recordDomainEvent(new StatusUpdatedFailureEvent());
+
+        return $promo;
+    }
+
+    public static function success(
+        string $promoId,
+        string $title,
+        string $body
+    ): static
+    {
+        $promo = new self(
+            promoId: new PromoId($promoId),
+            title: new PromoTitle($title),
+            body: new PromoBody($body),
+        );
+        $promo->setStatus(Status::MODERATION_SUCCESS);
+        $promo->setActive(true);
+
+        $promo->recordDomainEvent(new StatusUpdatedSuccessEvent());
 
         return $promo;
     }
@@ -88,8 +118,15 @@ class Promo extends AggregateRoot
         return $this->active;
     }
 
-    private function setStatus(Status $status)
+    private function setStatus(Status $status): static
     {
         $this->status = $status;
+        return $this;
+    }
+
+    private function setActive(bool $active): static
+    {
+        $this->active = $active;
+        return $this;
     }
 }

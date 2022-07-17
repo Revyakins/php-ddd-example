@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ArgumentResolver;
+namespace App\Billboard\Promo\Application\ArgumentResolver;
 
 use App\Billboard\Promo\Application\DTO\Request\CreatePromo;
 use Symfony\Component\HttpFoundation\Request;

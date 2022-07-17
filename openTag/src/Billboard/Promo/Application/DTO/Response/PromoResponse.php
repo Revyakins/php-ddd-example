@@ -8,7 +8,7 @@ use JsonSerializable;
 class PromoResponse implements JsonSerializable
 {
     public function __construct(
-        public readonly int $id,
+        public readonly string $id,
         public readonly bool $active,
         public readonly string $title,
         public readonly string $body,
