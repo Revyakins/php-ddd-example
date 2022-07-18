@@ -4,8 +4,8 @@ services:
     image: postgres:14.4
     restart: always
     environment:
-      POSTGRES_PASSWORD: openTag
-      POSTGRES_DB: openTag
+      POSTGRES_PASSWORD: billboard
+      POSTGRES_DB: billboard
     ports:
     - '5433:5432'
   api:
@@ -16,8 +16,8 @@ services:
     - ./:/var/www/symfony:cached
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: openTag
-      POSTGRES_DB: openTag
+      POSTGRES_PASSWORD: billboard
+      POSTGRES_DB: billboard
     links:
     - postgres
     depends_on:

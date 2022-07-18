@@ -24,5 +24,5 @@ RUN rm /etc/localtime
 RUN ln -s /usr/share/zoneinfo/Europe/Kiev /etc/localtime
 RUN "date"
 
-WORKDIR /var/www/symfony/openTag
+WORKDIR /var/www/symfony/service
 

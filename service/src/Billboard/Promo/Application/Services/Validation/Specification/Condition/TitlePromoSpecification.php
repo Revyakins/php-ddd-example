@@ -12,11 +12,7 @@ class TitlePromoSpecification implements PromoSpecification
 {
     public function isSatisfiedBy(Promo $promo): bool
     {
-        $specification =
-            new NotSpecification(
-                new UpperCaseSpecification(),
-                new ExclamationMarkSpecification()
-            );
+        $specification = new NotSpecification(new UpperCaseSpecification(), new ExclamationMarkSpecification());
 
         return $specification->isSatisfiedBy($promo);
     }
